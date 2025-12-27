@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart Contact Book</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f5f5;
+    }
+    header {
+      background: #2c3e50;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 { margin: 0; }
+    header p { margin-top: 8px; font-size: 14px; opacity: 0.9; }
+
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .form-row input {
+      flex: 1;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      min-width: 150px;
+    }
+    button {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    #addBtn { background: #27ae60; color: #fff; }
+    #updateBtn { background: #2980b9; color: #fff; display: none; }
+    #cancelEditBtn { background: #7f8c8d; color: #fff; display: none; }
+
+    .filter-section {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+      align-items: center;
+    }
+    #searchInput {
+      flex: 1;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    #favoritesOnly {
+      padding: 8px 12px;
+      background: #f39c12;
+      color: #fff;
+    }
+    #favoritesOnly:hover { background: #e67e22; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border-bottom: 1px solid #eee;
+      padding: 12px 8px;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background: #ecf0f1;
+      position: sticky;
+      top: 0;
+    }
+
+    .action-btn {
+      margin-right: 4px;
+      margin-bottom: 4px;
+      font-size: 12px;
+      padding: 6px 8px;
+    }
+    .edit { background: #2980b9; color: #fff; }
+    .delete { background: #c0392b; color: #fff; }
+    .call { background: #16a085; color: #fff; }
+    .sms { background: #8e44ad; color: #fff; }
+    .loc { background: #d35400; color: #fff; }
+    .favorite {
+      background: #f1c40f;
+      color: #fff;
+      font-weight: bold;
+    }
+    .favorite.unfavorite:hover { background: #f39c12; }
+
+    .favorite-icon {
+      font-size: 16px;
+      margin-right: 4px;
+    }
+    .favorite-row {
+      background-color: #fff3cd;
+      font-weight: 500;
+    }
+
+    #locationStatus {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 13px;
+      background: #e8f4f8;
+      border-left: 4px solid #3498db;
+    }
+
+    @media (max-width: 768px) {
+      .form-row { flex-direction: column; }
+      .filter-section { flex-direction: column; }
+      .action-btn { font-size: 11px; padding: 4px 6px; margin: 1px; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>⭐ Smart Contact Book</h1>
+  <p>Manage contacts with favorites, call, SMS, location tracking & search - perfect for your CSE project!</p>
+</header>
+
+<div class="container">
+  <!-- Add/Edit Form -->
+  <div id="formSection">
+    <h2>Add New Contact</h2>
+    <div class="form-row">
+      <input type="text" id="name" placeholder="Full Name *" />
+      <input type="tel" id="phone" placeholder="Phone Number *" />
+      <input type="email" id="email" placeholder="Email (optional)" />
+    </div>
+    <div class="form-row">
+      <button id="addBtn">➕ Add Contact</button>
+      <button id="updateBtn">✏️ Update Contact</button>
+      <button id="cancelEditBtn">❌ Cancel</button>
+    </div>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <h3>Contacts</h3>
+    <input type="text" id="searchInput" placeholder="🔍 Search by name or phone..." />
+    <button id="favoritesOnly">⭐ Favorites Only</button>
+  </div>
+
+  <!-- Contact Table -->
+  <table>
+    <thead>
+      <tr>
+        <th>Fav</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="contactBody">
+      <!-- Dynamic content -->
+    </tbody>
+  </table>
+
+  <!-- Location Display -->
+  <div id="locationStatus"></div>
+</div>
+
+<script>
+  let contacts = [];
+  let editIndex = null;
+  let showFavoritesOnly = false;
+
+  // DOM Elements
+  const nameInput = document.getElementById("name");
+  const phoneInput = document.getElementById("phone");
+  const emailInput = document.getElementById("email");
+  const addBtn = document.getElementById("addBtn");
+  const updateBtn = document.getElementById("updateBtn");
+  const cancelEditBtn = document.getElementById("cancelEditBtn");
+  const contactBody = document.getElementById("contactBody");
+  const searchInput = document.getElementById("searchInput");
+  const favoritesOnlyBtn = document.getElementById("favoritesOnly");
+  const locationStatus = document.getElementById("locationStatus");
+
+  // Render contacts with favorites styling
+  function renderContacts(filteredContacts) {
+    contactBody.innerHTML = "";
+    filteredContacts.forEach((contact, index) => {
+      const tr = document.createElement("tr");
+      if (contact.isFavorite) tr.classList.add("favorite-row");
+
+      tr.innerHTML = `
+        <td>
+          <button class="action-btn favorite ${contact.isFavorite ? '' : 'unfavorite'}" 
+                  onclick="toggleFavorite(${index})">
+            ${contact.isFavorite ? '⭐' : '☆'}
+          </button>
+        </td>
+        <td>${contact.name}</td>
+        <td>${contact.phone}</td>
+        <td>${contact.email || ""}</td>
+        <td>
+          <button class="action-btn call" onclick="callContact('${contact.phone}')">📞</button>
+          <button class="action-btn sms" onclick="smsContact('${contact.phone}')">💬</button>
+          <button class="action-btn edit" onclick="editContact(${index})">✏️</button>
+          <button class="action-btn delete" onclick="deleteContact(${index})">🗑️</button>
+          <button class="action-btn loc" onclick="trackLocation('${contact.name}')">📍</button>
+        </td>
+      `;
+      contactBody.appendChild(tr);
+    });
+  }
+
+  // Toggle favorite status
+  window.toggleFavorite = function(index) {
+    contacts[index].isFavorite = !contacts[index].isFavorite;
+    renderCurrentList();
+  };
+
+  // Add new contact
+  addBtn.addEventListener("click", () => {
+    const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim();
+    const email = emailInput.value.trim();
+
+    if (!name || !phone) {
+      alert("❌ Name and phone are required!");
+      return;
+    }
+
+    contacts.push({ name, phone, email, isFavorite: false });
+    clearForm();
+    renderCurrentList();
+  });
+
+  // Edit contact
+  window.editContact = function(index) {
+    const contact = contacts[index];
+    nameInput.value = contact.name;
+    phoneInput.value = contact.phone;
+    emailInput.value = contact.email || "";
+    editIndex = index;
+
+    addBtn.style.display = "none";
+    updateBtn.style.display = "inline-block";
+    cancelEditBtn.style.display = "inline-block";
+  };
+
+  // Update contact
+  updateBtn.addEventListener("click", () => {
+    if (editIndex === null) return;
+
+    const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim();
+    const email = emailInput.value.trim();
+
+    if (!name || !phone) {
+      alert("❌ Name and phone are required!");
+      return;
+    }
+
+    contacts[editIndex] = { 
+      name, 
+      phone, 
+      email, 
+      isFavorite: contacts[editIndex].isFavorite 
+    };
+    clearForm();
+    renderCurrentList();
+
+    editIndex = null;
+    addBtn.style.display = "inline-block";
+    updateBtn.style.display = "none";
+    cancelEditBtn.style.display = "none";
+  });
+
+  // Cancel edit
+  cancelEditBtn.addEventListener("click", clearFormAndReset);
+
+  // Delete contact
+  window.deleteContact = function(index) {
+    if (confirm("🗑️ Delete this contact?")) {
+      contacts.splice(index, 1);
+      renderCurrentList();
+    }
+  };
+
+  // Search + Filter logic
+  function renderCurrentList() {
+    const query = searchInput.value.toLowerCase();
+    let filtered = contacts.filter(contact =>
+      contact.name.toLowerCase().includes(query) ||
+      contact.phone.toLowerCase().includes(query)
+    );
+
+    if (showFavoritesOnly) {
+      filtered = filtered.filter(contact => contact.isFavorite);
+    }
+
+    renderContacts(filtered);
+  }
+
+  searchInput.addEventListener("input", renderCurrentList);
+
+  // Toggle favorites filter
+  favoritesOnlyBtn.addEventListener("click", () => {
+    showFavoritesOnly = !showFavoritesOnly;
+    favoritesOnlyBtn.textContent = showFavoritesOnly ? "📱 All Contacts" : "⭐ Favorites Only";
+    favoritesOnlyBtn.style.background = showFavoritesOnly ? "#27ae60" : "#f39c12";
+    renderCurrentList();
+  });
+
+  // Phone actions
+  window.callContact = function(phone) {
+    window.location.href = `tel:${phone}`;
+  };
+
+  window.smsContact = function(phone) {
+    window.location.href = `sms:${phone}`;
+  };
+
+  // Location tracking
+  window.trackLocation = function(contactName) {
+    if (!navigator.geolocation) {
+      locationStatus.textContent = "❌ Geolocation not supported";
+      return;
+    }
+
+    locationStatus.innerHTML = `📍 Getting location for <strong>${contactName}</strong>...`;
+
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const { latitude, longitude } = position.coords;
+        const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        locationStatus.innerHTML = `
+          📍 <strong>${contactName}</strong> Location:<br>
+          Lat: ${latitude.toFixed(5)} | Lng: ${longitude.toFixed(5)}<br>
+          <a href="${mapUrl}" target="_blank">🗺️ Open in Google Maps</a>
+        `;
+      },
+      error => {
+        locationStatus.textContent = `❌ Location error: ${error.message}`;
+      }
+    );
+  };
+
+  function clearForm() {
+    nameInput.value = phoneInput.value = emailInput.value = "";
+  }
+
+  function clearFormAndReset() {
+    clearForm();
+    editIndex = null;
+    addBtn.style.display = "inline-block";
+    updateBtn.style.display = "none";
+    cancelEditBtn.style.display = "none";
+  }
+
+  // Initialize
+  renderCurrentList();
+</script>
+</body>
+</html>
