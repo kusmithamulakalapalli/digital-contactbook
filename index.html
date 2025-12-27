@@ -5,63 +5,199 @@
   <title>ContactHub 2.0</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* ALL STYLES - PASTE COMPLETE */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
-    
-    /* INTRO PAGE STYLES */
+
+    /* INTRO PAGE */
     .intro-page {
       height: 100vh;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      text-align: center; color: white; position: relative; overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
     }
     .intro-page::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
       opacity: 0.3;
     }
     .hero-emoji { font-size: 6rem; margin-bottom: 20px; animation: float 3s ease-in-out infinite; }
     @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-15px);} }
-    .gradient-text { font-size: 3.5rem; font-weight: 800; background: linear-gradient(45deg, #fff, #f0f8ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; text-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-    .hero-subtitle { font-size: 1.4rem; line-height: 1.6; max-width: 600px; margin-bottom: 40px; }
-    .highlight { background: linear-gradient(45deg, #ffd700, #ffed4e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
-    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 800px; margin: 40px 0; }
-    .feature { background: rgba(255,255,255,0.15); padding: 15px 25px; border-radius: 30px; font-size: 1rem; backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); transition: all 0.3s ease; }
+    .gradient-text {
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: linear-gradient(45deg, #fff, #f0f8ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .hero-subtitle {
+      font-size: 1.4rem;
+      line-height: 1.6;
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
+    .highlight {
+      background: linear-gradient(45deg, #ffd700, #ffed4e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      max-width: 800px;
+      margin: 40px 0;
+    }
+    .feature {
+      background: rgba(255,255,255,0.15);
+      padding: 15px 25px;
+      border-radius: 30px;
+      font-size: 1rem;
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: all 0.3s ease;
+    }
     .feature:hover { transform: translateY(-5px); background: rgba(255,255,255,0.25); }
-    .enter-btn { background: linear-gradient(45deg, #ff6b6b, #feca57); color: white; padding: 18px 50px; font-size: 1.3rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(255,107,107,0.4); }
-    .enter-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255,107,107,0.6); }
+    .enter-btn {
+      background: linear-gradient(45deg, #ff6b6b, #feca57);
+      color: white;
+      padding: 18px 50px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(255,107,107,0.4);
+    }
+    .enter-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(255,107,107,0.6);
+    }
 
-    /* APP PAGE STYLES */
+    /* APP PAGE */
     .app-page { display: none; min-height: 100vh; background: #f5f5f5; }
-    .container { max-width: 1100px; margin: 20px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-    .form-row { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-    .form-row input { flex: 1; padding: 12px; border-radius: 8px; border: 2px solid #e1e8ed; min-width: 180px; font-size: 14px; }
-    button { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; }
-    #addBtn { background: #27ae60; color: white; } #updateBtn { background: #2980b9; color: white; display: none; } #cancelEditBtn { background: #7f8c8d; color: white; display: none; }
-    button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-    .filter-section { display: flex; gap: 15px; margin: 25px 0; align-items: center; flex-wrap: wrap; }
-    #searchInput { flex: 1; padding: 12px; border-radius: 8px; border: 2px solid #e1e8ed; font-size: 14px; min-width: 250px; }
-    #favoritesOnly { padding: 12px 20px; background: #f39c12; color: white; }
+    .container {
+      max-width: 1100px;
+      margin: 20px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    .form-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .form-row input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: 2px solid #e1e8ed;
+      min-width: 180px;
+      font-size: 14px;
+    }
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    #addBtn { background: #27ae60; color: white; }
+    #updateBtn { background: #2980b9; color: white; display: none; }
+    #cancelEditBtn { background: #7f8c8d; color: white; display: none; }
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .filter-section {
+      display: flex;
+      gap: 15px;
+      margin: 25px 0;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    #searchInput {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: 2px solid #e1e8ed;
+      font-size: 14px;
+      min-width: 250px;
+    }
+    #favoritesOnly {
+      padding: 12px 20px;
+      background: #f39c12;
+      color: white;
+    }
+
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border-bottom: 1px solid #eee; padding: 15px 12px; text-align: left; font-size: 14px; }
-    th { background: #f8f9fa; font-weight: 600; color: #2c3e50; }
-    .action-btn { margin: 2px; font-size: 12px; padding: 8px 12px; border-radius: 6px; }
-    .edit { background: #2980b9; color: white; } .delete { background: #c0392b; color: white; }
-    .call { background: #16a085; color: white; } .sms { background: #8e44ad; color: white; }
-    .loc { background: #d35400; color: white; } .favorite { background: #f1c40f; color: white; font-weight: bold; }
+    th, td {
+      border-bottom: 1px solid #eee;
+      padding: 15px 12px;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    .action-btn {
+      margin: 2px;
+      font-size: 12px;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+    .edit { background: #2980b9; color: white; }
+    .delete { background: #c0392b; color: white; }
+    .call { background: #16a085; color: white; }
+    .sms { background: #8e44ad; color: white; }
+    .loc { background: #d35400; color: white; }
+    .favorite { background: #f1c40f; color: white; font-weight: bold; }
     .favorite-row { background-color: #fff3cd !important; }
-    #locationStatus { margin-top: 25px; padding: 20px; border-radius: 10px; background: #e8f4f8; border-left: 5px solid #3498db; font-size: 14px; }
-    @media (max-width: 768px) { .gradient-text { font-size: 2.5rem; } .hero-emoji { font-size: 4rem; } .features-grid { grid-template-columns: 1fr; } .form-row, .filter-section { flex-direction: column; } }
+
+    #locationStatus {
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 10px;
+      background: #e8f4f8;
+      border-left: 5px solid #3498db;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .gradient-text { font-size: 2.5rem; }
+      .hero-emoji { font-size: 4rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .form-row, .filter-section { flex-direction: column; }
+    }
   </style>
 </head>
 <body>
-  <!-- 🔥 INTRO SCREEN (LOADS FIRST) 🔥 -->
+  <!-- PAGE 1: INTRO -->
   <div class="intro-page" id="introPage">
     <div class="hero-emoji">📱✨</div>
     <h1 class="gradient-text">ContactHub 2.0</h1>
     <p class="hero-subtitle">
-      Your <span class="highlight">smart contact vault</span> with instant calls, SMS, GPS tracking & smart favorites ⭐<br>
+      Your <span class="highlight">smart contact vault</span> with instant calls, SMS, GPS
+      tracking & smart favorites ⭐<br>
       <small>Built for the 2025 digital squad 🔥</small>
     </p>
     <div class="features-grid">
@@ -73,16 +209,16 @@
     <button class="enter-btn" onclick="enterApp()">🚀 Enter ContactHub</button>
   </div>
 
-  <!-- 📱 CONTACT APP (HIDDEN UNTIL ENTER CLICKED) -->
+  <!-- PAGE 2: APP SCREEN -->
   <div class="app-page" id="appPage">
     <div class="container">
-      <h2 style="margin-bottom: 20px; color: #2c3e50;">👥 Contact Management</h2>
-      
-      <!-- ADD/EDIT FORM -->
+      <h2 style="margin-bottom: 20px; color:#2c3e50;">👥 Contact Management</h2>
+
+      <!-- FORM -->
       <div class="form-row">
-        <input type="text" id="name" placeholder="👤 Full Name *" />
-        <input type="tel" id="phone" placeholder="📱 Phone Number *" />
-        <input type="email" id="email" placeholder="📧 Email (optional)" />
+        <input type="text" id="name" placeholder="👤 Full Name *">
+        <input type="tel" id="phone" placeholder="📱 Phone Number *">
+        <input type="email" id="email" placeholder="📧 Email (optional)">
       </div>
       <div class="form-row">
         <button id="addBtn">➕ Add Contact</button>
@@ -90,27 +226,44 @@
         <button id="cancelEditBtn">❌ Cancel</button>
       </div>
 
-      <!-- SEARCH & FILTER -->
+      <!-- SEARCH / FILTER -->
       <div class="filter-section">
         <h3>📋 Contacts</h3>
-        <input type="text" id="searchInput" placeholder="🔍 Search by name or phone..." />
+        <input type="text" id="searchInput" placeholder="🔍 Search by name or phone...">
         <button id="favoritesOnly">⭐ Favorites Only</button>
       </div>
 
-      <!-- CONTACT TABLE -->
+      <!-- TABLE -->
       <table>
-        <thead><tr><th>Fav</th><th>Name</th><th>Phone</th><th>Email</th><th>Actions</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Fav</th>
+            <th>Name (A–Z)</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
         <tbody id="contactBody"></tbody>
       </table>
+
       <div id="locationStatus"></div>
     </div>
   </div>
 
-  <!-- 🧠 COMPLETE JAVASCRIPT -->
   <script>
-    let contacts = []; let editIndex = null; let showFavoritesOnly = false;
-    
-    // DOM Elements
+    // PAGE SWITCH
+    function enterApp() {
+      document.getElementById('introPage').style.display = 'none';
+      document.getElementById('appPage').style.display = 'block';
+      document.getElementById('name').focus();
+    }
+
+    // CONTACT APP LOGIC
+    let contacts = [];
+    let editIndex = null;
+    let showFavoritesOnly = false;
+
     const nameInput = document.getElementById("name");
     const phoneInput = document.getElementById("phone");
     const emailInput = document.getElementById("email");
@@ -122,21 +275,25 @@
     const favoritesOnlyBtn = document.getElementById("favoritesOnly");
     const locationStatus = document.getElementById("locationStatus");
 
-    // Enter app from intro
-    function enterApp() {
-      document.getElementById('introPage').style.display = 'none';
-      document.getElementById('appPage').style.display = 'block';
-      nameInput.focus();
-    }
+    // sort contacts A–Z by name
+    function sortContactsAZ(list) {
+      return list.slice().sort((a, b) =>
+        a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+      );
+    } // uses standard JS sort for alphabetical order[web:39][web:40]
 
-    // Render contacts
-    function renderContacts(filteredContacts) {
+    function renderContacts(list) {
       contactBody.innerHTML = "";
-      filteredContacts.forEach((contact, index) => {
+      list.forEach((contact, index) => {
         const tr = document.createElement("tr");
         if (contact.isFavorite) tr.classList.add("favorite-row");
         tr.innerHTML = `
-          <td><button class="action-btn favorite ${contact.isFavorite ? '' : 'unfavorite'}" onclick="toggleFavorite(${index})">${contact.isFavorite ? '⭐' : '☆'}</button></td>
+          <td>
+            <button class="action-btn favorite ${contact.isFavorite ? '' : 'unfavorite'}"
+                    onclick="toggleFavorite(${index})">
+              ${contact.isFavorite ? '⭐' : '☆'}
+            </button>
+          </td>
           <td>${contact.name}</td>
           <td>${contact.phone}</td>
           <td>${contact.email || ""}</td>
@@ -152,48 +309,74 @@
       });
     }
 
-    // Toggle favorite
-    window.toggleFavorite = function(index) {
-      contacts[index].isFavorite = !contacts[index].isFavorite;
-      renderCurrentList();
-    };
+    function renderCurrentList() {
+      const q = searchInput.value.toLowerCase();
+      let filtered = contacts.filter(c =>
+        c.name.toLowerCase().includes(q) ||
+        c.phone.toLowerCase().includes(q)
+      );
+      if (showFavoritesOnly) {
+        filtered = filtered.filter(c => c.isFavorite);
+      }
+      const sorted = sortContactsAZ(filtered);
+      renderContacts(sorted);
+    }
 
     // Add contact
     addBtn.addEventListener("click", () => {
       const name = nameInput.value.trim();
       const phone = phoneInput.value.trim();
       const email = emailInput.value.trim();
-      if (!name || !phone) { alert("❌ Name and phone required!"); return; }
+      if (!name || !phone) {
+        alert("❌ Name and phone required!");
+        return;
+      }
       contacts.push({ name, phone, email, isFavorite: false });
       clearForm();
       renderCurrentList();
     });
 
-    // Edit contact
+    // Toggle favourite
+    window.toggleFavorite = function(index) {
+      contacts[index].isFavorite = !contacts[index].isFavorite;
+      renderCurrentList();
+    };
+
+    // Edit
     window.editContact = function(index) {
-      const contact = contacts[index];
-      nameInput.value = contact.name;
-      phoneInput.value = contact.phone;
-      emailInput.value = contact.email || "";
+      const c = contacts[index];
+      nameInput.value = c.name;
+      phoneInput.value = c.phone;
+      emailInput.value = c.email || "";
       editIndex = index;
       addBtn.style.display = "none";
       updateBtn.style.display = "inline-block";
       cancelEditBtn.style.display = "inline-block";
     };
 
-    // Update contact
+    // Update
     updateBtn.addEventListener("click", () => {
       if (editIndex === null) return;
       const name = nameInput.value.trim();
       const phone = phoneInput.value.trim();
       const email = emailInput.value.trim();
-      if (!name || !phone) { alert("❌ Name and phone required!"); return; }
-      contacts[editIndex] = { name, phone, email, isFavorite: contacts[editIndex].isFavorite };
+      if (!name || !phone) {
+        alert("❌ Name and phone required!");
+        return;
+      }
+      contacts[editIndex] = {
+        name,
+        phone,
+        email,
+        isFavorite: contacts[editIndex].isFavorite
+      };
       clearFormAndReset();
       renderCurrentList();
     });
 
-    // Delete contact
+    cancelEditBtn.addEventListener("click", clearFormAndReset);
+
+    // Delete
     window.deleteContact = function(index) {
       if (confirm("🗑️ Delete this contact?")) {
         contacts.splice(index, 1);
@@ -201,43 +384,56 @@
       }
     };
 
-    // Search & Filter
-    function renderCurrentList() {
-      const query = searchInput.value.toLowerCase();
-      let filtered = contacts.filter(contact =>
-        contact.name.toLowerCase().includes(query) || contact.phone.toLowerCase().includes(query)
-      );
-      if (showFavoritesOnly) filtered = filtered.filter(contact => contact.isFavorite);
-      renderContacts(filtered);
-    }
-
+    // Search
     searchInput.addEventListener("input", renderCurrentList);
+
+    // Favourites filter
     favoritesOnlyBtn.addEventListener("click", () => {
       showFavoritesOnly = !showFavoritesOnly;
-      favoritesOnlyBtn.textContent = showFavoritesOnly ? "📱 All Contacts" : "⭐ Favorites Only";
-      favoritesOnlyBtn.style.background = showFavoritesOnly ? "#27ae60" : "#f39c12";
+      favoritesOnlyBtn.textContent =
+        showFavoritesOnly ? "📱 All Contacts" : "⭐ Favorites Only";
+      favoritesOnlyBtn.style.background =
+        showFavoritesOnly ? "#27ae60" : "#f39c12";
       renderCurrentList();
     });
 
-    // Phone actions
-    window.callContact = function(phone) { window.location.href = `tel:${phone}`; };
-    window.smsContact = function(phone) { window.location.href = `sms:${phone}`; };
+    // Call / SMS
+    window.callContact = function(phone) {
+      window.location.href = `tel:${phone}`;
+    };
+    window.smsContact = function(phone) {
+      window.location.href = `sms:${phone}`;
+    };
 
-    // Location tracking
+    // Location tracking with Geolocation API[web:13][web:19]
     window.trackLocation = function(contactName) {
-      if (!navigator.geolocation) { locationStatus.textContent = "❌ Geolocation not supported"; return; }
-      locationStatus.innerHTML = `📍 Getting location for <strong>${contactName}</strong>...`;
+      if (!navigator.geolocation) {
+        locationStatus.textContent = "❌ Geolocation not supported in this browser.";
+        return;
+      }
+      locationStatus.innerHTML =
+        `📍 Getting location for <strong>${contactName}</strong>...`;
       navigator.geolocation.getCurrentPosition(
-        position => {
-          const { latitude, longitude } = position.coords;
-          const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
-          locationStatus.innerHTML = `📍 <strong>${contactName}</strong> Location:<br>Lat: ${latitude.toFixed(5)} | Lng: ${longitude.toFixed(5)}<br><a href="${mapUrl}" target="_blank">🗺️ Open in Google Maps</a>`;
+        pos => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          const url = `https://www.google.com/maps?q=${lat},${lon}`;
+          locationStatus.innerHTML =
+            `📍 <strong>${contactName}</strong> Location:<br>
+             Lat: ${lat.toFixed(5)} | Lng: ${lon.toFixed(5)}<br>
+             <a href="${url}" target="_blank">🗺️ Open in Google Maps</a>`;
         },
-        error => { locationStatus.textContent = `❌ Location error: ${error.message}`; }
+        err => {
+          locationStatus.textContent = "❌ Location error: " + err.message;
+        }
       );
     };
 
-    function clearForm() { nameInput.value = phoneInput.value = emailInput.value = ""; }
+    function clearForm() {
+      nameInput.value = "";
+      phoneInput.value = "";
+      emailInput.value = "";
+    }
     function clearFormAndReset() {
       clearForm();
       editIndex = null;
@@ -246,7 +442,7 @@
       cancelEditBtn.style.display = "none";
     }
 
-    // Initialize
+    // Initial render
     renderCurrentList();
   </script>
 </body>
